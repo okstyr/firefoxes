@@ -1,0 +1,77 @@
+#!/bin/bash
+
+# ff, ff-clone, ff-rm, ff-name etc
+# makes a 'mega-profile' for firefox
+# 
+# apart from these scripts you need this
+# /home/blah/firefoxes/default-exe
+#        -- " --       default-home
+# exe is where you unzip the firefox tar to
+# home is the replacement of $HOME as far as ff is concerned
+#
+# ff-clone will copy these two directories to blah-exe and blah-home
+# and do some other magick
+#
+# blah-home will contain .mozilla/profiles.ini and .mozilla/firefox/default
+# which is the profile - but completely localised and tucked away from all the others
+
+# building default-exe and default-home from scratch hasnt been tested
+# you should really copy these from an existing firefoxes
+
+prog=$(basename $0)
+
+ff_dir=$HOME/firefoxes
+name=${1:?need to provide a name - perhaps one of these: "$(echo;ls -d $HOME/firefoxes/*-exe|sed -E 's#/home/oki/firefoxes/(.*)-exe#\1#')"}
+
+default_root=${ff_dir}/default
+root=${ff_dir}/${name}
+
+exe_dir=${root}-exe
+profile_dir=${root}-profile
+home_dir=${root}-home
+
+function clone {
+  cp -rp ${default_root}-exe ${exe_dir}
+  cp -rp ${default_root}-home ${home_dir}
+
+  name
+}
+
+function run {
+  HOME=${home_dir} nohup ${exe_dir}/firefox --no-remote &
+}
+
+function delete {
+    # lets be a little cautious m'kay
+    rm -rf ${ff_dir}/${name}-exe
+    rm -rf ${ff_dir}/${name}-home
+}
+
+function name {
+    # puts an image up saying which 'profile' this is
+    # couldnt get it to work by editing userChrome.css
+    # so i installed a theme (ecotheme) and over-wrote the theme images
+    temp_header=/tmp/${name}-header.png
+    profile_dir=${home_dir}/.mozilla/firefox/default
+    dest1=${profile_dir}/lightweighttheme-header
+    dest2=${profile_dir}/lwtheme/lightweighttheme-header-1920x1080
+    convert -background black -fill white -font Helvetica -size 1920x200 -pointsize 40 -gravity north-east -background lightgrey label:"${name}     " $temp_header
+    cp $temp_header $dest1
+    cp $temp_header $dest2
+}
+
+if [[ $prog == 'ff' ]] ; then
+    run
+elif [[ $prog == 'ff-clone' ]] ; then
+    clone
+elif [[ $prog == 'ff-rm' ]] ; then
+    delete
+elif [[ $prog == 'ff-name' ]] ; then
+    name
+else
+    echo "what is this prog $prog ($1)"
+    exit 1
+fi
+
+
+

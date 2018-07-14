@@ -1,0 +1,11 @@
+#!/bin/bash
+
+bindir=$HOME/bin
+
+cp ff $bindir
+chmod +x $bindir/ff
+ln -s $bindir/ff $bindir/ff-clone
+ln -s $bindir/ff $bindir/ff-rm
+ln -s $bindir/ff $bindir/ff-name
+
+
