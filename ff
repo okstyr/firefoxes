@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 # ff, ff-clone, ff-rm, ff-name etc
 # makes a 'mega-profile' for firefox

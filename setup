@@ -1,11 +1,16 @@
 #!/bin/bash
 
+set -euo pipefail
+
 bindir=$HOME/bin
 
-cp ff $bindir
+ln -s $(pwd)/ff $bindir/ff
 chmod +x $bindir/ff
-ln -s $bindir/ff $bindir/ff-clone
-ln -s $bindir/ff $bindir/ff-rm
-ln -s $bindir/ff $bindir/ff-name
+ln -s $(pwd)/ff $bindir/ff-clone
+ln -s $(pwd)/ff $bindir/ff-rm
+ln -s $(pwd)/ff $bindir/ff-name
 
-
+ffdir=$HOME/firefoxes
+mkdir $ffdir
+mkdir -p $ffdir/default-exe
+mkdir -p $ffdir/default-home
