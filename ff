@@ -1,6 +1,6 @@
 #!/bin/bash
 set -euo pipefail
-
+set -x
 # ff, ff-clone, ff-rm, ff-name etc
 # makes a 'mega-profile' for firefox
 # 
@@ -24,16 +24,18 @@ prog=$(basename $0)
 ff_dir=$HOME/firefoxes
 name=${1:?need to provide a name - perhaps one of these: "$(echo;ls -d $HOME/firefoxes/*-exe|sed -E 's#/home/oki/firefoxes/(.*)-exe#\1#')"}
 
-default_root=${ff_dir}/default
+
+default_source=default
 root=${ff_dir}/${name}
 
+clone_source=${ff_dir}/${2:-$default_source}
 exe_dir=${root}-exe
 profile_dir=${root}-profile
 home_dir=${root}-home
 
 function clone {
-  cp -rp ${default_root}-exe ${exe_dir}
-  cp -rp ${default_root}-home ${home_dir}
+  cp -rp ${clone_source}-exe ${exe_dir}
+  cp -rp ${clone_source}-home ${home_dir}
 
   name
 }
@@ -56,10 +58,24 @@ function name {
     profile_dir=${home_dir}/.mozilla/firefox/default
     dest1=${profile_dir}/lightweighttheme-header
     dest2=${profile_dir}/lwtheme/lightweighttheme-header-1920x1080
-    convert -background black -fill white -font Helvetica -size 1920x200 -pointsize 40 -gravity north-east -background lightgrey label:"${name}     " $temp_header
+    convert -background gray92 -fill white -font Helvetica -size 1920x200 -pointsize 40 -gravity north-east label:"${name}     " $temp_header
     cp $temp_header $dest1
     cp $temp_header $dest2
 }
+
+
+# do we want to clone a specific 'profile'
+if [[ ! -d $clone_source-home ]] ; then
+  echo "$clone_source-home dosnt exist"
+  exit 1
+fi
+
+# not sure if I want to make it this easy
+#if [[ ! -d $home_dir ]] ; then
+#  echo "cloning from $clone_source to $name"
+#  clone
+#  run
+#fi
 
 if [[ $prog == 'ff' ]] ; then
     run
