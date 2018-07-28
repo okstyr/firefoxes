@@ -17,7 +17,8 @@ manage multiple independant firefox profiles
     - this is on hold till i decide if i really want it
   - consider making up a naming convention like `foo-bar` - will launch if `foo-bar` exists otherwise
     will clone `foo-bar` from `foo`
-
+  ## not so important
+  - round those tab corners!
   ### even less important
   - make up name for 'profile'
 
