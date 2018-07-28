@@ -14,3 +14,11 @@ ffdir=$HOME/firefoxes
 mkdir $ffdir
 mkdir -p $ffdir/default-exe
 mkdir -p $ffdir/default-home
+
+echo "
+setup is now complete
+download a firefox bzip and unpack it to `$ffdir/default-exe`
+then run it with 'ff default'. configure it how you like and install
+whatever plugins you want. when you 'ff-clone' all those settings
+will be copied
+"

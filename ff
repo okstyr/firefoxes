@@ -7,7 +7,7 @@ set -euo pipefail
 # apart from these scripts you need this
 # /home/blah/firefoxes/default-exe
 #        -- " --       default-home
-# exe is where you unzip the firefox tar to
+# -exe is where you unzip the firefox tar to
 # home is the replacement of $HOME as far as ff is concerned
 #
 # ff-clone will copy these two directories to blah-exe and blah-home
@@ -22,7 +22,7 @@ set -euo pipefail
 prog=$(basename $0)
 
 ff_dir=$HOME/firefoxes
-name=${1:?need to provide a name - perhaps one of these: "$(echo;ls -d $HOME/firefoxes/*-exe|sed -E 's#/home/oki/firefoxes/(.*)-exe#\1#')"}
+name=${1:?need to provide a name - perhaps one of these: "$(echo;ls -d ${ff_dir}/*-exe|sed -E "s#$ff_dir/(.*)-exe#\1#")"}
 
 
 default_source=default
