@@ -3,7 +3,7 @@ set -euo pipefail
 
 # ff, ff-clone, ff-rm, ff-name etc
 # makes a 'mega-profile' for firefox
-# 
+#
 # apart from these scripts you need this
 # /home/blah/firefoxes/default-exe
 #        -- " --       default-home
@@ -57,7 +57,8 @@ function name {
     temp_header=/tmp/${name}-header.png
     profile_dir=${home_dir}/.mozilla/firefox/default
     dest1=${profile_dir}/lightweighttheme-header
-    dest2=${profile_dir}/lwtheme/lightweighttheme-header-1920x1080
+    # better not be more than one of these
+    dest2=${profile_dir}/lwtheme/lightweighttheme-header-*
     convert -background gray92 -fill white -font Helvetica -size 1920x200 -pointsize 40 -gravity north-east label:"${name}     " $temp_header
     cp $temp_header $dest1
     cp $temp_header $dest2
