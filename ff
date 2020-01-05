@@ -39,8 +39,6 @@ function list {
 function clone {
   cp -rp ${clone_source}-exe ${exe_dir}
   cp -rp ${clone_source}-home ${home_dir}
-
-  name
 }
 
 function run {
@@ -56,6 +54,7 @@ function delete {
 function chrome {
   # copies desired userChrome to an instance
   # placeholder right now
+  echo not yet
 }
 
 function name {
