@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # ff, ff-clone, ff-rm, ff-name etc
-# makes a 'mega-profile' for firefox
+# makes a firefox "instance"
 #
 # apart from these scripts you need this
 # /home/blah/firefoxes/default-exe
@@ -28,7 +28,6 @@ default_source=default
 root=${ff_dir}/${name}
 
 exe_dir=${root}-exe
-profile_dir=${root}-profile
 home_dir=${root}-home
 userchrome_dir=${ff_dir}/userchrome
 chrome_path=".mozilla/firefox/default/chrome/userChrome.css"
