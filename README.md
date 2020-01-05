@@ -37,6 +37,7 @@ So if you (shudder) use facebook, you can allow the facebook js in only the face
 ## TODO
 
 ### code smells
+  - danger will robinson: still havent tested the setup script (what could go wrong?)
   - the use of variables is getting a bit shakey
     - I think all functions should be passed `$@` like `chrome` not make assumptions about `$2` etc like `clone`
     - theres a bunch of vars being declared up the top that only get used inside one func - maybe they should be moved
