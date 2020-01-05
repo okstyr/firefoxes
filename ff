@@ -48,9 +48,14 @@ function run {
 }
 
 function delete {
-    # lets be a little cautious m'kay
-    rm -rf ${ff_dir}/${name}-exe
-    rm -rf ${ff_dir}/${name}-home
+  # lets be a little cautious m'kay
+  rm -rf ${ff_dir}/${name}-exe
+  rm -rf ${ff_dir}/${name}-home
+}
+
+function chrome {
+  # copies desired userChrome to an instance
+  # placeholder right now
 }
 
 function name {
