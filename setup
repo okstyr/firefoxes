@@ -3,14 +3,15 @@
 set -euo pipefail
 
 bindir=$HOME/bin
+ffdir=$HOME/firefoxes
 
 ln -s $(pwd)/ff $bindir/ff
 chmod +x $bindir/ff
+ln -s $(pwd)/ff $bindir/ff-list
 ln -s $(pwd)/ff $bindir/ff-clone
 ln -s $(pwd)/ff $bindir/ff-rm
 ln -s $(pwd)/ff $bindir/ff-name
 
-ffdir=$HOME/firefoxes
 mkdir $ffdir
 mkdir -p $ffdir/default-exe
 mkdir -p $ffdir/default-home

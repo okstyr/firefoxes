@@ -22,8 +22,7 @@ set -euo pipefail
 prog=$(basename $0)
 
 ff_dir=$HOME/firefoxes
-name=${1:?need to provide a name - perhaps one of these: "$(echo;ls -d ${ff_dir}/*-exe|sed -E "s#$ff_dir/(.*)-exe#\1#")"}
-
+name=${1:?need to provide a name - run "ff-list <regex>"}
 
 default_source=default
 root=${ff_dir}/${name}
@@ -32,6 +31,10 @@ clone_source=${ff_dir}/${2:-$default_source}
 exe_dir=${root}-exe
 profile_dir=${root}-profile
 home_dir=${root}-home
+
+function list {
+  ls -d ${ff_dir}/*-exe|sed -E "s#$ff_dir/(.*)-exe#\1#"|egrep -i "$name"
+}
 
 function clone {
   cp -rp ${clone_source}-exe ${exe_dir}
@@ -83,6 +86,8 @@ fi
 
 if [[ $prog == 'ff' ]] ; then
     run
+elif [[ $prog == 'ff-list' ]] ; then
+    list
 elif [[ $prog == 'ff-clone' ]] ; then
     clone
 elif [[ $prog == 'ff-rm' ]] ; then

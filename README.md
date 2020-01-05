@@ -11,6 +11,7 @@ the clones.
 run setup and follow instructions. once you have done that you
 will have the following scripts:
 - `ff`        launches one of your firefox 'profiles'
+- `ff-list`   lists all your profiles
 - `ff-clone`  makes a copy from `default` or from source specified
 - `ff-rm`     deletes a copy
 - `ff-name`   makes a background image from name of clone
