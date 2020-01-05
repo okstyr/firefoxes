@@ -14,6 +14,7 @@ will have the following scripts:
 - `ff-clone`  makes a copy from `default` or from source specified
 - `ff-rm`     deletes a copy
 - `ff-name`   makes a background image from name of clone
+  - note `ff-name` is no longer working after version 66(~ish)
 
 ## motivation
 After ff 57, one of my favorite plugins no longer worked (tab groups). There were similar

@@ -51,6 +51,9 @@ function delete {
 }
 
 function name {
+    # this was pretty hacky - and 66 broke it so for now .....
+    echo ERROR the whole name thing is not working
+    exit 1
     # puts an image up saying which 'profile' this is
     # couldnt get it to work by editing userChrome.css
     # so i installed a theme (ecotheme) and over-wrote the theme images
