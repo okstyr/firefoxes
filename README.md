@@ -14,6 +14,7 @@ will have the following scripts:
 - `ff-list`   lists all your profiles
 - `ff-clone`  makes a copy from `default` or from source specified
 - `ff-rm`     deletes a copy
+- `ff-chrome` copies designated userChrome file to one or more instances
 - `ff-name`   makes a background image from name of clone
   - note `ff-name` is no longer working after version 66(~ish)
 

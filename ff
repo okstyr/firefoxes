@@ -27,16 +27,22 @@ name=${1:?need to provide a name - run "ff-list <regex>"}
 default_source=default
 root=${ff_dir}/${name}
 
-clone_source=${ff_dir}/${2:-$default_source}
 exe_dir=${root}-exe
 profile_dir=${root}-profile
 home_dir=${root}-home
+userchrome_dir=${ff_dir}/userchrome
+chrome_path=".mozilla/firefox/default/chrome/userChrome.css"
 
 function list {
   ls -d ${ff_dir}/*-exe|sed -E "s#$ff_dir/(.*)-exe#\1#"|egrep -i "$name"
 }
 
 function clone {
+  clone_source=${ff_dir}/${2:-$default_source}
+  if [[ ! -d $clone_source-home ]] ; then
+    echo "$clone_source-home dosnt exist"
+    exit 1
+  fi
   cp -rp ${clone_source}-exe ${exe_dir}
   cp -rp ${clone_source}-home ${home_dir}
 }
@@ -53,8 +59,14 @@ function delete {
 
 function chrome {
   # copies desired userChrome to an instance
-  # placeholder right now
-  echo not yet
+  chromefile=$name
+  shift
+  for i in "$@"; do
+    cmd="cp ${userchrome_dir}/$name ${ff_dir}/${i}-home/${chrome_path}"
+    # ima just leave this here till its tested more"
+    echo "doing this: $cmd"
+    $cmd
+  done
 }
 
 function name {
@@ -75,11 +87,6 @@ function name {
 }
 
 
-# do we want to clone a specific 'profile'
-if [[ ! -d $clone_source-home ]] ; then
-  echo "$clone_source-home dosnt exist"
-  exit 1
-fi
 
 # not sure if I want to make it this easy
 #if [[ ! -d $home_dir ]] ; then
@@ -96,6 +103,8 @@ elif [[ $prog == 'ff-clone' ]] ; then
     clone
 elif [[ $prog == 'ff-rm' ]] ; then
     delete
+elif [[ $prog == 'ff-chrome' ]] ; then
+    chrome "$@"
 elif [[ $prog == 'ff-name' ]] ; then
     name
 else
