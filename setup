@@ -10,11 +10,14 @@ chmod +x $bindir/ff
 ln -s $(pwd)/ff $bindir/ff-list
 ln -s $(pwd)/ff $bindir/ff-clone
 ln -s $(pwd)/ff $bindir/ff-rm
+ln -s $(pwd)/ff $bindir/ff-chrome
 ln -s $(pwd)/ff $bindir/ff-name
 
 mkdir $ffdir
 mkdir -p $ffdir/default-exe
 mkdir -p $ffdir/default-home
+
+cp -rp userchrome $ffdir/userchrome
 
 echo "
 setup is now complete
