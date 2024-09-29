@@ -30,6 +30,7 @@ root=${ff_dir}/${name}
 exe_dir=${root}-exe
 home_dir=${root}-home
 userchrome_dir=${ff_dir}/userchrome
+profiles_path=.mozilla/firefox/profiles.ini
 chrome_path=".mozilla/firefox/default/chrome/userChrome.css"
 
 function list {
@@ -47,6 +48,12 @@ function clone {
 }
 
 function run {
+  if [[ $name != $default_source ]]; then
+    # dont change our default setup
+    # this sed is necessary to revert to old profile after first run
+    # thanks to firefoxes habit of creating random profile on new install
+    sed -i 's/Default=.*/Default=default/' ${home_dir}/${profiles_path}
+  fi
   HOME=${home_dir} nohup ${exe_dir}/firefox --no-remote &
 }
 
