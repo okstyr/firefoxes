@@ -1,7 +1,13 @@
 #!/bin/bash
 
 set -euo pipefail
-
+#
+#  NOTE
+#  also need to run this from
+#  cp /usr/share/applications/firefox.desktop /home/oki/.local/share/applications
+#  sed -i 's#/usr/lib/firefox/firefox#HOME=/home/oki/firefoxes/sys-default-home nohup /home/oki/firefoxes/sys-default-exe/firefox --no-remote#' firefox.desktop
+#  update-desktop-database ~/.local/share/applications
+#
 bindir=$HOME/bin
 ffdir=$HOME/firefoxes
 
