@@ -1,0 +1,14 @@
+#!/bin/bash
+set -euo pipefail
+
+echo sorry you are about to destroy everything in bb
+
+# shellcheck disable=SC2162,SC2034
+read -p 'ctrl-c to abort' crap
+
+bindir=$HOME/bin
+bbdir=$HOME/browsers
+
+rm "$bindir"/bb*
+rm -rf "$bbdir"
+
