@@ -1,34 +1,45 @@
 #!/bin/bash
-
 set -euo pipefail
+
+bindir=$HOME/bin
+bbdir=$HOME/browsers
+
+# likewise this will fail too (very deliberately)
+mkdir "$bbdir"
+
+# these links will fail if this script has been run before (also deliberately)
+ln -s "$(pwd)/bb" "$bindir/bb"
+chmod +x "$bindir/bb"
+ln -s "$(pwd)/bb" "$bindir/bb-list"
+ln -s "$(pwd)/bb" "$bindir/bb-clone"
+ln -s "$(pwd)/bb" "$bindir/bb-rm"
+ln -s "$(pwd)/bb" "$bindir/bb-chrome"
+ln -s "$(pwd)/bb" "$bindir/bb-name"
+
+#firefox only and also they keep breaking it
+#cp -rp userchrome "$bbdir/userchrome"
+
 #
 #  NOTE
-#  also need to run this from
+#  also need to run something like this for which ever browser i want to be the default
 #  cp /usr/share/applications/firefox.desktop /home/oki/.local/share/applications
 #  sed -i 's#/usr/lib/firefox/firefox#HOME=/home/oki/firefoxes/sys-default-home nohup /home/oki/firefoxes/sys-default-exe/firefox --no-remote#' firefox.desktop
 #  update-desktop-database ~/.local/share/applications
 #
-bindir=$HOME/bin
-ffdir=$HOME/firefoxes
 
-ln -s $(pwd)/ff $bindir/ff
-chmod +x $bindir/ff
-ln -s $(pwd)/ff $bindir/ff-list
-ln -s $(pwd)/ff $bindir/ff-clone
-ln -s $(pwd)/ff $bindir/ff-rm
-ln -s $(pwd)/ff $bindir/ff-chrome
-ln -s $(pwd)/ff $bindir/ff-name
-
-mkdir $ffdir
-mkdir -p $ffdir/default-exe
-mkdir -p $ffdir/default-home
-
-cp -rp userchrome $ffdir/userchrome
-
-echo "
+echo '
 setup is now complete
-download a firefox bzip and unpack it to `$ffdir/default-exe`
-then run it with 'ff default'. configure it how you like and install
-whatever plugins you want. when you 'ff-clone' all those settings
+download <browser> and unpack it to `'"$bbdir"'/base-<browser>-exe` and
+create a blah-home directory as well
+then run it with `bb base-<browser>`. configure it how you like and install
+whatever plugins you want. when you `bb-<browser>-clone` all those settings
 will be copied
-"
+
+Things to do to the base:
+- setup default profile
+- does anything need to be done to preserve the profile on fresh install (thanks, firefox)
+- set home dir pointing to the fake one
+- install ad/js blockers, markdown plugin, side tab bar etc
+- stop nagging for default browser
+- clear out history and cache so its nice and fresh
+'
