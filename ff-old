@@ -1,0 +1,122 @@
+#!/bin/bash
+set -euo pipefail
+
+# ff, ff-clone, ff-rm, ff-name etc
+# makes a firefox "instance"
+#
+# apart from these scripts you need this
+# /home/blah/firefoxes/default-exe
+#        -- " --       default-home
+# -exe is where you unzip the firefox tar to
+# home is the replacement of $HOME as far as ff is concerned
+#
+# ff-clone will copy these two directories to blah-exe and blah-home
+# and do some other magick
+#
+# blah-home will contain .mozilla/profiles.ini and .mozilla/firefox/default
+# which is the profile - but completely localised and tucked away from all the others
+
+# building default-exe and default-home from scratch hasnt been tested
+# you should really copy these from an existing firefoxes
+
+prog=$(basename $0)
+
+ff_dir=$HOME/firefoxes
+name=${1:?need to provide a name - run "ff-list <regex>"}
+
+default_source=default
+root=${ff_dir}/${name}
+
+exe_dir=${root}-exe
+home_dir=${root}-home
+userchrome_dir=${ff_dir}/userchrome
+profiles_path=.mozilla/firefox/profiles.ini
+chrome_path=".mozilla/firefox/default/chrome/userChrome.css"
+
+function list {
+  ls -d ${ff_dir}/*-exe|sed -E "s#$ff_dir/(.*)-exe#\1#"|egrep -i "$name" #"
+}
+
+function clone {
+  clone_source=${ff_dir}/${2:-$default_source}
+  if [[ ! -d $clone_source-home ]] ; then
+    echo "$clone_source-home dosnt exist"
+    exit 1
+  fi
+  cp -rp ${clone_source}-exe ${exe_dir}
+  cp -rp ${clone_source}-home ${home_dir}
+}
+
+function run {
+  if [[ $name != $default_source ]]; then
+    # dont change our default setup
+    # this sed is necessary to revert to old profile after first run
+    # thanks to firefoxes habit of creating random profile on new install
+    sed -i 's/Default=.*/Default=default/' ${home_dir}/${profiles_path}
+  fi
+  HOME=${home_dir} nohup ${exe_dir}/firefox --no-remote &
+}
+
+function delete {
+  # lets be a little cautious m'kay
+  rm -rf ${ff_dir}/${name}-exe
+  rm -rf ${ff_dir}/${name}-home
+}
+
+function chrome {
+  # copies desired userChrome to an instance
+  chromefile=$name
+  shift
+  for i in "$@"; do
+    cmd="cp ${userchrome_dir}/$name ${ff_dir}/${i}-home/${chrome_path}"
+    # ima just leave this here till its tested more"
+    echo "doing this: $cmd"
+    $cmd
+  done
+}
+
+function name {
+    # this was pretty hacky - and 66 broke it so for now .....
+    echo ERROR the whole name thing is not working
+    exit 1
+    # puts an image up saying which 'profile' this is
+    # couldnt get it to work by editing userChrome.css
+    # so i installed a theme (ecotheme) and over-wrote the theme images
+    temp_header=/tmp/${name}-header.png
+    profile_dir=${home_dir}/.mozilla/firefox/default
+    dest1=${profile_dir}/lightweighttheme-header
+    # better not be more than one of these
+    dest2=${profile_dir}/lwtheme/lightweighttheme-header-*
+    convert -background gray92 -fill white -font Helvetica -size 1920x200 -pointsize 40 -gravity north-east label:"${name}     " $temp_header
+    cp $temp_header $dest1
+    cp $temp_header $dest2
+}
+
+
+
+# not sure if I want to make it this easy
+#if [[ ! -d $home_dir ]] ; then
+#  echo "cloning from $clone_source to $name"
+#  clone
+#  run
+#fi
+
+if [[ $prog == 'ff' ]] ; then
+    run
+elif [[ $prog == 'ff-list' ]] ; then
+    list
+elif [[ $prog == 'ff-clone' ]] ; then
+    clone
+elif [[ $prog == 'ff-rm' ]] ; then
+    delete
+elif [[ $prog == 'ff-chrome' ]] ; then
+    chrome "$@"
+elif [[ $prog == 'ff-name' ]] ; then
+    name
+else
+    echo "what is this prog $prog ($1)"
+    exit 1
+fi
+
+
+

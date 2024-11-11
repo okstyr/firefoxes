@@ -5,8 +5,8 @@ set -euo pipefail
 # makes a firefox "instance"
 #
 # apart from these scripts you need this
-# /home/blah/firefoxes/default-exe
-#        -- " --       default-home
+# /home/blah/browsers/base-$browser-exe
+#        -- " --       base-$browser-home
 # -exe is where you unzip the firefox tar to
 # home is the replacement of $HOME as far as ff is concerned
 #
@@ -16,21 +16,31 @@ set -euo pipefail
 # blah-home will contain .mozilla/profiles.ini and .mozilla/firefox/default
 # which is the profile - but completely localised and tucked away from all the others
 
-# building default-exe and default-home from scratch hasnt been tested
-# you should really copy these from an existing firefoxes
+# building base-$browser-exe and base-$browser-home from scratch hasnt been tested
+# you should really copy these from an existing browsers
 
 prog=$(basename $0)
 
-ff_dir=$HOME/firefoxes
-name=${1:?need to provide a name - run "ff-list <regex>"}
+ff_dir=$HOME/browsers
 
-default_source=default
-root=${ff_dir}/${name}
+# if cloning, $name1 will be browser name, $name2 will be instance name
+# if not, $name1 will be instance name and $name2 will be empty
+name1=${1:?need to provide a name - run "ff-list <regex>"}
+name2=${2:-""}
 
+if [[ "$prog" == "bb-clone" ]]; then
+  # asking the same question in two different places is the sign of a 1337 programmer
+  browser=$name1
+  name=${name2:?clone needs a browser name and an instance name}
+  root=${ff_dir}/${name2}
+else
+  browser=""
+  name=${name1}
+  root=${ff_dir}/${name}
+fi
 exe_dir=${root}-exe
 home_dir=${root}-home
 userchrome_dir=${ff_dir}/userchrome
-profiles_path=.mozilla/firefox/profiles.ini
 chrome_path=".mozilla/firefox/default/chrome/userChrome.css"
 
 function list {
@@ -38,23 +48,17 @@ function list {
 }
 
 function clone {
-  clone_source=${ff_dir}/${2:-$default_source}
+  clone_source=${ff_dir}/base-$browser
+  if [[ ! -d $clone_source-exe ]] ; then
+    echo "ERROR: $clone_source-exe dosnt exist"
+    exit 1
+  fi
   if [[ ! -d $clone_source-home ]] ; then
-    echo "$clone_source-home dosnt exist"
+    echo "ERROR: $clone_source-home dosnt exist"
     exit 1
   fi
   cp -rp ${clone_source}-exe ${exe_dir}
   cp -rp ${clone_source}-home ${home_dir}
-}
-
-function run {
-  if [[ $name != $default_source ]]; then
-    # dont change our default setup
-    # this sed is necessary to revert to old profile after first run
-    # thanks to firefoxes habit of creating random profile on new install
-    sed -i 's/Default=.*/Default=default/' ${home_dir}/${profiles_path}
-  fi
-  HOME=${home_dir} nohup ${exe_dir}/firefox --no-remote &
 }
 
 function delete {
@@ -75,44 +79,36 @@ function chrome {
   done
 }
 
-function name {
-    # this was pretty hacky - and 66 broke it so for now .....
-    echo ERROR the whole name thing is not working
-    exit 1
-    # puts an image up saying which 'profile' this is
-    # couldnt get it to work by editing userChrome.css
-    # so i installed a theme (ecotheme) and over-wrote the theme images
-    temp_header=/tmp/${name}-header.png
-    profile_dir=${home_dir}/.mozilla/firefox/default
-    dest1=${profile_dir}/lightweighttheme-header
-    # better not be more than one of these
-    dest2=${profile_dir}/lwtheme/lightweighttheme-header-*
-    convert -background gray92 -fill white -font Helvetica -size 1920x200 -pointsize 40 -gravity north-east label:"${name}     " $temp_header
-    cp $temp_header $dest1
-    cp $temp_header $dest2
+function what_browser {
+  cat $exe_dir/bb-browser
 }
 
+function launch_firefox {
+  profiles_path=.mozilla/firefox/profiles.ini
+  if $(echo $name|grep -vq '^base'); then
+    # dont change our default setup
+    # this sed is necessary to revert to old profile after first run
+    # thanks to firefox's habit of creating random profile on new install
+    sed -i 's/Default=.*/Default=default/' ${home_dir}/${profiles_path}
+  fi
+  HOME=${home_dir} nohup ${exe_dir}/firefox --no-remote &
+}
 
+function run {
+  browser=$(what_browser)
+  launch_$browser
+}
 
-# not sure if I want to make it this easy
-#if [[ ! -d $home_dir ]] ; then
-#  echo "cloning from $clone_source to $name"
-#  clone
-#  run
-#fi
-
-if [[ $prog == 'ff' ]] ; then
+if [[ $prog == 'bb' ]] ; then
     run
-elif [[ $prog == 'ff-list' ]] ; then
+elif [[ $prog == 'bb-list' ]] ; then
     list
-elif [[ $prog == 'ff-clone' ]] ; then
+elif [[ $prog == 'bb-clone' ]] ; then
     clone
-elif [[ $prog == 'ff-rm' ]] ; then
+elif [[ $prog == 'bb-rm' ]] ; then
     delete
-elif [[ $prog == 'ff-chrome' ]] ; then
+elif [[ $prog == 'bb-chrome' ]] ; then
     chrome "$@"
-elif [[ $prog == 'ff-name' ]] ; then
-    name
 else
     echo "what is this prog $prog ($1)"
     exit 1
