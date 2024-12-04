@@ -15,6 +15,7 @@ ln -s "$(pwd)/bb" "$bindir/bb-clone"
 ln -s "$(pwd)/bb" "$bindir/bb-rm"
 ln -s "$(pwd)/bb" "$bindir/bb-chrome"
 ln -s "$(pwd)/bb" "$bindir/bb-name"
+ln -s "$(pwd)/bb" "$bindir/bb-history"
 
 #firefox only and also they keep breaking it
 #cp -rp userchrome "$bbdir/userchrome"

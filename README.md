@@ -18,11 +18,7 @@ You will also need to set up one or more base browser instances. Not to be used,
 The instructions are in the setup script output
 
 ## TODO
-- to setup a default home page for each instance do something like this:
-`prefs.js:user_pref("browser.startup.homepage", "file:///home/oki/browsers/poop-home/bb-files/bb-home.html");`
-in
-`/home/oki/browsers/poop-home/.mozilla/firefox/default`
-and create a `bb-files` file ofcourse
+- special home page - not doing it. see default-home-page.md
 
 ## motivation
 I already had a system to launch seperate instances of firefox (see below) and i finally got tired of

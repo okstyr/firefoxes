@@ -43,9 +43,12 @@ home_dir=${root}-home
 userchrome_dir=${ff_dir}/userchrome
 chrome_path=".mozilla/firefox/default/chrome/userChrome.css"
 
+log_file="$ff_dir/bb-history"
+
 function list {
   ls -d ${ff_dir}/*-exe|sed -E "s#$ff_dir/(.*)-exe#\1#"|egrep -i "$name"
 }
+# i have some double-quote related highlighging problem this fixes it"
 
 function clone {
   clone_source=${ff_dir}/base-$browser
@@ -96,7 +99,16 @@ function launch_firefox {
 
 function run {
   browser=$(what_browser)
+  # log launch info, but only if $name doesnt start with 'xx'
+  if $(echo $name|grep -vq '^xx'); then
+    now=$(date +%F_%T)
+    echo "$now $name" >> $ff_dir/$log_file
+  fi
   launch_$browser
+}
+
+function grep_history {
+  cat $log_file | grep "$name"
 }
 
 if [[ $prog == 'bb' ]] ; then
@@ -107,6 +119,8 @@ elif [[ $prog == 'bb-clone' ]] ; then
     clone
 elif [[ $prog == 'bb-rm' ]] ; then
     delete
+elif [[ $prog == 'bb-history' ]] ; then
+    grep_history
 elif [[ $prog == 'bb-chrome' ]] ; then
     chrome "$@"
 else
