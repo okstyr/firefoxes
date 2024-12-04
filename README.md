@@ -9,10 +9,11 @@ you can also run multiple browsers and versions of browsers.
 
 run setup and follow instructions. once you have done that you
 will have the following scripts:
-- `bb`        launches one of your firefox instances
-- `bb-list`   lists all your instances, can do a regex search
-- `bb-clone`  makes a copy from `default` or from source specified
-- `bb-rm`     deletes a copy
+- `bb`         launches one of your firefox instances
+- `bb-list`    lists all your instances, can do a regex search, must include valid regex
+- `bb-clone`   makes a copy from `default` or from source specified
+- `bb-rm`      deletes a copy
+- `bb-history` greps the launch log for a regex, like bb-list
 
 You will also need to set up one or more base browser instances. Not to be used, but to be cloned from
 The instructions are in the setup script output
