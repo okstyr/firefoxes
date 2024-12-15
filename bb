@@ -25,19 +25,11 @@ ff_dir=$HOME/browsers
 
 # if cloning, $name1 will be browser name, $name2 will be instance name
 # if not, $name1 will be instance name and $name2 will be empty
-name1=${1:?need to provide a name - run "ff-list <regex>"}
-name2=${2:-""}
+name=${1:?need to provide a name - run "ff-list <regex>"}
+base_browser=${2:-""}
 
-if [[ "$prog" == "bb-clone" ]]; then
-  # asking the same question in two different places is the sign of a 1337 programmer
-  browser=$name1
-  name=${name2:?clone needs a browser name and an instance name}
-  root=${ff_dir}/${name2}
-else
-  browser=""
-  name=${name1}
-  root=${ff_dir}/${name}
-fi
+root=${ff_dir}/${name}
+
 exe_dir=${root}-exe
 home_dir=${root}-home
 userchrome_dir=${ff_dir}/userchrome
@@ -51,7 +43,7 @@ function list {
 # i have some double-quote related highlighging problem this fixes it"
 
 function clone {
-  clone_source=${ff_dir}/base-$browser
+  clone_source=${ff_dir}/base-$base_browser
   if [[ ! -d $clone_source-exe ]] ; then
     echo "ERROR: $clone_source-exe dosnt exist"
     exit 1
@@ -95,6 +87,17 @@ function launch_firefox {
     sed -i 's/Default=.*/Default=default/' ${home_dir}/${profiles_path}
   fi
   HOME=${home_dir} nohup ${exe_dir}/firefox --no-remote &
+}
+
+function launch_floorp {
+  profiles_path=.floorp/profiles.ini
+  if $(echo $name|grep -vq '^base'); then
+    # dont change our default setup
+    # this sed is necessary to revert to old profile after first run
+    # thanks to firefox's habit of creating random profile on new install
+    sed -i 's/Default=.*/Default=default/' ${home_dir}/${profiles_path}
+  fi
+  HOME=${home_dir} nohup ${exe_dir}/floorp --no-remote &
 }
 
 function run {
