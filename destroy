@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
-
-echo you are about to destroy everything in bb
+echo This will wipe a bb install. Hope this is really what you want to do.
+echo You are about to destroy everything in bb and all the symlinks.
 
 # shellcheck disable=SC2162,SC2034
 read -p 'ctrl-c to abort' crap

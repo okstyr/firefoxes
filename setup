@@ -32,15 +32,15 @@ echo '
 setup is now complete
 download <browser> and unpack it to `'"$bbdir"'/base-<browser>-exe` and
 create a blah-home directory as well
-create `browser` script in blah-exe to launch brower
+create `launch_<browser>` function in bb to launch brower
 then run it with `bb base-<browser>`. configure it how you like and install
 whatever plugins you want. when you `bb-clone <browser> <name>` all those settings
 will be copied
 
 Things to do to the base:
+This is just a summary, see the manual for more
 - setup default profile
 - does anything need to be done to preserve the profile on fresh install (thanks, firefox)
-- set home dir pointing to the fake one
 - stop it from closing tabs (and warning) on exit
 - install ad/js blockers, markdown plugin, side tab bar etc
 - stop nagging for default browser
