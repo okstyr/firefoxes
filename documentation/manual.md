@@ -45,4 +45,32 @@ Known dotdir locations:
 - floorp       `$HOME/.floorp`
 More maybe available in the `bb` script in `launch_*` functions
 
+### procedure
+After first running $browser you'll have a few files/dirs in $dotdir. There will be a file called `profiles.ini` and some directories with names like `5xaj7uaz.default-release`. Either have a look inside the directories to see which one is the default (there will be a directory called `extensions` containing the extentions you added) or go into settings/profiles in the browser and find the default there. Note this directory, i will refer to it as $profiledir
+- launch `bb base-$browser` and exit it. This will create a dotdir under `base-$browser-home`.
+- *** note. the next steps not tested - writing from memory
+- `cp -rp` the $profiledir from $dotdir to the new $dotdir under `base-$browser-home`, and rename it to `default`
+- edit the `base-$browser-home/$dotdir/profile.ini`. Whatever you have instead of `[Install8102E1DFF4D1D65D]` (for the default profile) leave it that way, otherwise make it look like this:
+```
+[Profile0]
+Name=default
+IsRelative=1
+Path=default
+Default=1
+
+[General]
+StartWithLastProfile=1
+Version=2
+
+[Install8102E1DFF4D1D65D]
+Default=default
+Locked=1
+```
+- now clone your new base browser. `bb-clone mything $browser`
+- now execute `bb base-mything` again. It will look like nothing worked, but don't despair, just exit
+- now execute `bb base-mything` again. This time you should see all you extensions back. Yay.
+- Job Done!
+
+### profile notes
+There is probably a simpler way of doing this profile wrangling but this works. Once upon a time i had many other features associated with this. Features involving a custom theme, some more code, and userchrome.css. I got tired of playing whack-a-mole with mozilla breaking all my stuff with every second or third update. Since then everything i have done is to decrease my reliance on the whims of mozilla devs. This way of doing it has stood the test of quite a few years.
 
